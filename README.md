@@ -1,0 +1,2 @@
+# CompetitiveProgrammingTemplate
+just a template
