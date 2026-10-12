@@ -30,6 +30,19 @@ struct PST{
         timeline.push_back(segTree[1]);
     }
 
+    void build(vector<ll>& a)
+    {
+        for(int i = 0; i < a.size(); ++i)
+        {
+            segTree[N + i]->sum = a[i];
+        }
+
+        for(int i = N - 1; i >= 1; --i)
+        {
+            *segTree[i] = combine(segTree[2 * i], segTree[2 * i + 1]);
+        }
+    }
+
     PSTNode combine(PSTNode* first, PSTNode* second)
     {
         PSTNode temp;
@@ -56,34 +69,27 @@ struct PST{
                         queryTemplate(currNode->right, mid + 1, rightNode, leftQuery, rightQuery));
     }
     
-    void updateTemplate(ll idx, ll val)
+    PSTNode* updateTemplate(PSTNode* currNode, ll leftNode, ll rightNode, ll idx, ll val)
     {
-        ll curr = N + idx;
-        segTree.push_back(new PSTNode(val));
-        swap(segTree[curr], segTree.back());
+        ll mid = (leftNode + rightNode) / 2;
 
-        while(curr != 1)
+        ll dir = -1;
+        if(leftNode <= idx && idx <= mid) dir = 0;
+        if(mid + 1 <= idx && idx <= rightNode) dir = 1;
+        
+        PSTNode* newNode = new PSTNode();
+        if(leftNode == rightNode)
         {
-            ll parent = curr / 2;
-            
-            segTree.push_back(new PSTNode(0));
-            if(curr % 2 == 0)
-            {
-                segTree.back()->left = segTree[curr];
-                segTree.back()->right = segTree[parent]->right; 
-            }else
-            {
-                segTree.back()->right = segTree[curr];
-                segTree.back()->left = segTree[parent]->left; 
-            }
-            curr = parent;
-            swap(segTree[parent], segTree.back());
-
-            *segTree[curr] = combine(segTree[curr * 2], segTree[curr * 2 + 1]);
+            newNode->sum = val;
+        }else 
+        {
+            if(dir == 0) *newNode = combine(updateTemplate(currNode->left, leftNode, mid, idx, val), currNode->right);
+            else *newNode = combine(currNode->left, updateTemplate(currNode->right, mid + 1, rightNode, idx, val));
         }
-        timeline.push_back(segTree[1]);
+
+        return newNode;
     }
 
     PSTNode query(ll leftQuery, ll rightQuery, ll time) {return queryTemplate(timeline[time], 0, N - 1, leftQuery, rightQuery);}
-    void update(ll idx, ll val) {updateTemplate(idx, val);}
+    void update(ll idx, ll val, ll time) {timeline.push_back(updateTemplate(timeline[time], 0, N - 1, idx, val));}
 };
