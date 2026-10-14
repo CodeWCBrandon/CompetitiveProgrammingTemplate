@@ -5,7 +5,7 @@ struct SegTreeNode{
 };
 
 struct LazySegTreeNode{
-    ll val;
+    ll val = 0;
 
     LazySegTreeNode(){};
 };
@@ -72,6 +72,7 @@ struct LazySegTree{
         if(leftQuery <= leftNode && rightNode <= rightQuery)
         {
             lazy[currNode].val += val;
+            push(currNode, leftNode, rightNode);
             return;
         }
 
