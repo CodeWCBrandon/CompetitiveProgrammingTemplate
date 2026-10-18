@@ -1,16 +1,15 @@
-struct PSTNode{
-    ll sum = 0;
-    PSTNode* left = NULL;
-    PSTNode* right = NULL;
-
-    PSTNode(){};
-    PSTNode(ll val)
-    {
-        this->sum = val;
-    }
-};
-
 struct PST{
+    struct PSTNode{
+        ll sum = 0;
+        PSTNode* left = NULL;
+        PSTNode* right = NULL;
+
+        PSTNode(){};
+        PSTNode(ll val)
+        {
+            this->sum = val;
+        }
+    };
     vector<PSTNode*> timeline;
     vector<PSTNode*> segTree;
     ll N;

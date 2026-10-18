@@ -1,17 +1,16 @@
-struct edge{
-    ll u, v;
-    ll flow, capacity;
-
-    edge(ll u, ll v, ll cap)
-    {
-        this->u = u;
-        this->v = v;
-        this->flow = 0;
-        this-> capacity = cap;
-    }
-};
-
 struct Dinic{
+    struct edge{
+        ll u, v;
+        ll flow, capacity;
+
+        edge(ll u, ll v, ll cap)
+        {
+            this->u = u;
+            this->v = v;
+            this->flow = 0;
+            this-> capacity = cap;
+        }
+    };
     vector<edge> edgeList;
     vector<vector<ll>> adjList;
     vector<ll> level;

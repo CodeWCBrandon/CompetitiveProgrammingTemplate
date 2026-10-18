@@ -1,16 +1,16 @@
-struct SegTreeNode{
-    ll sum = 0;
-
-    SegTreeNode(){};
-};
-
-struct LazySegTreeNode{
-    ll val = 0;
-
-    LazySegTreeNode(){};
-};
-
 struct LazySegTree{
+    struct SegTreeNode{
+        ll sum = 0;
+
+        SegTreeNode(){};
+    };
+
+    struct LazySegTreeNode{
+        ll val = 0;
+
+        LazySegTreeNode(){};
+    };
+
     vector<SegTreeNode> segTree;
     vector<LazySegTreeNode> lazy;
     ll N;

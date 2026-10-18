@@ -1,8 +1,7 @@
-struct Node{
-    ll parent;
-};
-
 struct LCA{
+    struct Node{
+        ll parent;
+    };
     vector<vector<Node>> binaryLift;
     vector<ll> depth;
     ll n, pw;

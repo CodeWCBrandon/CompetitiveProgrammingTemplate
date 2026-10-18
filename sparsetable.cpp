@@ -1,9 +1,8 @@
-struct SparseTableNode{
-    ll mx;
-    ll mn;
-};
-
 struct sparseTable{
+    struct SparseTableNode{
+        ll mx;
+        ll mn;
+    };
     vector<vector<SparseTableNode>> a;
     ll n, p;
 
