@@ -17,7 +17,7 @@ struct CartesianTree{
             tree[i] = {a[i], -1, -1};
             ll last = -1;
 
-            while(!st.empty() && a[st.back()] <= a[i])
+            while(!st.empty() && a[st.back()] < a[i])
             {
                 last = st.back();
                 st.pop_back();
