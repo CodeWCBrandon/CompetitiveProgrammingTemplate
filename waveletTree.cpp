@@ -16,6 +16,7 @@ struct Wavelet{
     {
         tree.push_back(new Node());
         tree[0]->arr = a;
+        build();
     }
 
     Node* newNode()
