@@ -1,4 +1,4 @@
-struct hashCheck
+struct StringHash
 {
     struct hashedString
     {

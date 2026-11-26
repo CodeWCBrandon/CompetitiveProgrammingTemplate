@@ -1,43 +1,43 @@
-#include "bits/stdc++.h"
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
-#define ll long long
-#define mod 1000000007
-#define mod2 998244353
-using namespace std;
-
-// random 
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-template<class T> T rand_int(T mn, T mx) { return uniform_int_distribution<T>(mn, mx)(rng);}
-
-// pb_ds stuff
-using namespace __gnu_pbds;
-const int RANDOM = chrono::high_resolution_clock::now().time_since_epoch().count();
-struct chash {
-    static uint64_t splitmix64(uint64_t x) {
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
-
-    size_t operator()(uint64_t x) const {
-        static const uint64_t FIXED_RANDOM = std::chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x + FIXED_RANDOM);
-    }
-};
-
-template<class T> using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-template<class K, class V> using gpmap = gp_hash_table<K, V, chash>;
-
 struct SuffixArray{
-    vector<ll> arr;
+    vector<ll> arr, lcp;
     ll sz;
+
+    void radixSort(vector<pair<pair<ll, ll>, ll>>& a)
+    {
+        auto sortPass = [&](bool byFirst) 
+        {
+            vector<ll> cnt(sz, 0);
+            for (auto& item : a)
+            {
+                ll key = byFirst ? item.first.first : item.first.second;
+                cnt[key]++;
+            }
+
+            vector<ll> pos(sz, 0);
+            ll currIdx = 0;
+            for (ll i = 0; i < sz; ++i)
+            {
+                pos[i] = currIdx;
+                currIdx += cnt[i];
+            }
+
+            vector<pair<pair<ll, ll>, ll>> sortedA(sz);
+            for (auto& item : a)
+            {
+                ll key = byFirst ? item.first.first : item.first.second;
+                sortedA[pos[key]++] = item;
+            }
+
+            a = std::move(sortedA);
+        };
+
+        sortPass(false); 
+        sortPass(true); 
+    }
 
     SuffixArray(string s)
     {
-        s += '$';
+        s += '\$';
         this->sz = s.size();
         vector<ll> c(sz);
         arr.resize(sz);
@@ -67,7 +67,7 @@ struct SuffixArray{
             {
                 followUp[i] = {{c[i], c[(i + k) % sz]}, i}; 
             }
-            sort(followUp.begin(), followUp.end());
+            radixSort(followUp);
             c[followUp[0].second] = 0;
             for(int i = 1; i < sz; ++i)
             {
@@ -85,22 +85,33 @@ struct SuffixArray{
                 break;
             }
         }
+        buildLCP(s);
+    }
+
+    void buildLCP(string s) 
+    {
+        lcp.assign(sz, 0);
+        vector<ll> rank(sz, 0);
+        for (ll i = 0; i < sz; ++i) 
+        {
+            rank[arr[i]] = i;
+        }
+
+        ll k = 0;
+        for (ll i = 0; i < sz; ++i) 
+        {
+            if (rank[i] == 0) 
+            {
+                k = 0;
+                continue;
+            }
+            ll j = arr[rank[i] - 1];
+            while (i + k < sz && j + k < sz && s[i + k] == s[j + k]) 
+            {
+                ++k;
+            }
+            lcp[rank[i] - 1] = k;
+            if (k > 0) --k;
+        }
     }
 };
-
-void solve()
-{
-    
-}
-
-int main(void)
-{
-    ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
-
-    int t;
-    cin >> t;
-    while(t--)
-    {
-        solve();
-    }
-}

@@ -71,7 +71,7 @@ struct Dinic{
             ll id = adjList[curr][i];
             auto& [u, v, flow, capacity] = edgeList[id];
             ll available = capacity - flow;
-            if(available == 0 || level[v] <= level[u]) continue;
+            if(available == 0 || level[v] != level[u] + 1) continue;
             ll nextFlow = dfs(v, min(bottleneck, available));
 
             if(nextFlow == 0) continue;
